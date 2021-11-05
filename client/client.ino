@@ -20,8 +20,8 @@ void setup() {
   hc06.begin(9600);
   Serial.println("Initialization OK.");
   //Clearing the EEPROM
-  for (int i = 0 ; i < EEPROM.length() ; i++) {
-    EEPROM.write(i, 0);
+  //for (int i = 0 ; i < EEPROM.length() ; i++) {
+  //  EEPROM.write(i, 0);
   }
 }
 
@@ -30,6 +30,7 @@ void loop() {
   if(testConnexion()){
     Serial.println("Connection OK.");
     /*Sending data to ESP8266*/
+    //ADD YOUR CODE HERE!
   }
   else{
      Serial.println("Connection FAILED.");
@@ -51,17 +52,18 @@ void loop() {
           /*Writing that next time will not be the first connexion to EEPROM*/
           EEPROM.write(addrFirstCheckConnexion, 1);
           credentialsSent = true;
+          
+          //ENVOI DU LONGIN/MDP à l'ESP8266
         }
       }
       }
     } else{
       Serial.println("Not the first connection.");
       /*Connecting*/
+      //LECTURE EEPROM ET ENVOI DU LONGIN/MDP à l'ESP8266
     }
   }
-  /*wait 1h*/
   Serial.println("----- Waiting -----");
-  //delay(3600000); 
   delay(60000);
 }
 
@@ -83,13 +85,17 @@ bool testConnexion(){
   /*on test la connexion*/
   /*si OK return true*/
   /*si !OK return false*/
+  
+  //ENVOI D'UNE COMMANDE testConnexion à l'ESP8266
+  //WAIT UNE REPONSE DE l'ESP8266
+  
   return false;
 }
 
 void writeCredentials(String cmd){
   Serial.println("Writing credentials to EEPROM...");
   /*Writing credentials to EEPROM*/
-  //On parcourt toute la chaine cmd = 'SSID==wiFiSSIDPSW==wiFiPSW*
+  //We have to go through the whole chain cmd = 'SSID==wiFiSSIDPSW==wiFiPSW*
   int i=0;
   /*Wrinting expected String length in EEPROM*/
   
