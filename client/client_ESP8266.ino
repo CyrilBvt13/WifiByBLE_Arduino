@@ -8,7 +8,7 @@ char* password ;
 int pinGPIO2 = 2;
 
 //WiFiServer WebServer(80);
-WiFiClient client;
+//WiFiClient client;
 
 void setup() {
   Serial.begin(115200);
