@@ -11,7 +11,7 @@ String cmd="";
 int addrFirstCheckConnexion = 0;
 int addrCredentials = 1;
 
-char string[20];
+char string[20]; //UTILITE??
 
 void setup() {
   //Initialize Serial Monitor
@@ -30,7 +30,9 @@ void loop() {
   if(testConnexion()){
     Serial.println("Connection OK.");
     /*Sending data to ESP8266*/
+    
     //ADD YOUR CODE HERE!
+    
   }
   else{
      Serial.println("Connection FAILED.");
@@ -43,7 +45,6 @@ void loop() {
         while(credentialsSent == false){
         char buff=(char)hc06.read();
         cmd+=buff;
-
         if(buff =='*'){
           cmd = cmd.substring(0, cmd.length() - 1); // Delete last char *
           Serial.println(cmd);
@@ -51,16 +52,19 @@ void loop() {
           writeCredentials(cmd);
           /*Writing that next time will not be the first connexion to EEPROM*/
           EEPROM.write(addrFirstCheckConnexion, 1);
-          credentialsSent = true;
-          
-          //ENVOI DU LONGIN/MDP à l'ESP8266
+          credentialsSent = true;          
+          /*Sending credentials to ESP8266*/
+          sendCredentials(cmd);
         }
       }
       }
     } else{
       Serial.println("Not the first connection.");
       /*Connecting*/
-      //LECTURE EEPROM ET ENVOI DU LONGIN/MDP à l'ESP8266
+      /*Reading credentials from EEPROM*/
+      cmd = readCredentials();
+      /*Sending credentials to ESP8266*/ 
+      sendCredentials(cmd);
     }
   }
   Serial.println("----- Waiting -----");
@@ -82,14 +86,15 @@ bool checkFirstConnexion(){
 
 bool testConnexion(){
   Serial.println("Testing connection...");
-  /*on test la connexion*/
-  /*si OK return true*/
-  /*si !OK return false*/
-  
-  //ENVOI D'UNE COMMANDE testConnexion à l'ESP8266
-  //WAIT UNE REPONSE DE l'ESP8266
-  
-  return false;
+  /*we test the connection*/
+  /*if OK returns true*/
+  /*if !OK returns false*/
+  if(digitalRead(pin) == HIGH){
+    return true;
+  }
+  else{
+    return false;
+  }  
 }
 
 void writeCredentials(String cmd){
@@ -102,7 +107,7 @@ void writeCredentials(String cmd){
   Serial.println(itoa(addrCredentials,string,10)); // -- DELETE
   Serial.println(cmd.length()); // -- DELETE
   
-  //EEPROM.write(addrCredentials, cmd.length());
+  EEPROM.write(addrCredentials, cmd.length());
   addrCredentials++;
 
   /*Writing credentials to EEPROM*/
@@ -111,9 +116,27 @@ void writeCredentials(String cmd){
       Serial.println(itoa(addrCredentials,string,10)); // -- DELETE
       Serial.println(cmd.substring(i,i+1)); // -- DELETE
     
-      //EEPROM.write(addrCredentials, cmd.substring(i,i+1);
+      EEPROM.write(addrCredentials, cmd.substring(i,i+1);
       addrCredentials++;
       i++;
   }
   Serial.println("Writing credentials to EEPROM OK.");
+}
+
+
+String readCredentials(){
+  String credentials;
+  
+  /*Reading string lenght expecred*/
+  int credLenght = EEPROM.read(addrCredentials);
+  /*Reading credentials stored in EEPROM*/
+  for(i=0;i<credLenght;i++){
+    credentials[i] = EEPROM.read(addrCredentials+1+i);
+  }
+  return credentials;
+}
+
+void sendCredentials(String cmd){
+  //On passe par les pins TX/RX croisées ou on peut spécifier d'autres pins :
+  //https://www.arduino.cc/en/Tutorial/LibraryExamples/SoftwareSerialExample
 }
