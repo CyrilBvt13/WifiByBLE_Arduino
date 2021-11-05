@@ -7,9 +7,6 @@ char* password ;
 
 int pinGPIO2 = 2;
 
-//WiFiServer WebServer(80);
-//WiFiClient client;
-
 void setup() {
   Serial.begin(115200);
   delay(10);
@@ -29,6 +26,7 @@ void setup() {
 void loop() {
   while(//on a pas le login) {
     //ON ATTEND LES INFOS DE CONNEXION
+    //https://forum.arduino.cc/t/serial-input-basics-updated/382007
     }
   //ON A LES INFOS DE CONNEXION
   Serial.print("Connecting to ");
