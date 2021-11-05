@@ -1,13 +1,13 @@
 #include <ESP8266WiFi.h>
 
-String codeVersion = "Version 1.0  Aug 2021 by CyrilBvt13";
+String codeVersion = "Version 1.0 Aug 2021 by CyrilBvt13";
 
-const char* SSID = "YourSSID";
-const char* password = "YourPassword";
+char* SSID ;
+char* password ;
 
 int pinGPIO2 = 2;
 
-WiFiServer WebServer(80);
+//WiFiServer WebServer(80);
 WiFiClient client;
 
 void setup() {
@@ -23,54 +23,31 @@ void setup() {
   Serial.println();
   WiFi.disconnect();
   WiFi.mode(WIFI_STA);
-  Serial.print("Connecting to ");
-  Serial.println(SSID);
-  WiFi.begin(SSID, password);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.println("Connected to WiFi");
   
-  analogWrite(pinGPIO2, 1023);
-  ledStatus = 1;
-
-  WebServer.begin();
-  Serial.println("Web Server started");
-
-  Serial.print("You can connect to the ESP8266 at this URL: ");
-  Serial.print("http://");
-  Serial.print(WiFi.localIP());
-  Serial.println("/");
 }
 
 void loop() {
-  client = WebServer.available();
-  if (!client) {
-    return;
+  while(//on a pas le login) {
+    //ON ATTEND LES INFOS DE CONNEXION
+    }
+  //ON A LES INFOS DE CONNEXION
+  Serial.print("Connecting to ");
+  Serial.println(SSID);
+  WiFi.begin(SSID, password);
+  
+    while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");    
   }
-
-  Serial.println("User connected");
-  while (!client.available()) {
-    delay(1);
-  }
-
-  client.println("HTTP/1.1 200 OK");
-  client.println("Content-Type: text/html; charset=UTF-8");
-  client.println("");
-  client.println("<!DOCTYPE HTML>");
-  client.println("<html>");
-  client.println("<body>");
-
-  client.print("Hi gorgeous!</br>");
-
-  client.println("</body>");
-  client.println("</html>");
-
-  delay(1);
-  Serial.println("User disconnected");
+  
   Serial.println("");
+  Serial.println("Connected to WiFi");
+  
+  //ON ACTIVE LE PIN GPIO2 POUR DIRE A L'ARDUINO QU'ON EST CONNECTE
+  analogWrite(pinGPIO2, 1023);
+  ledStatus = 1;
 
+  while(//On reçoit des infos) {
+    //ON ENVOIE LES INFOS PAR WIFI A L'API
+    }
 }
