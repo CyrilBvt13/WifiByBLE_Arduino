@@ -2,6 +2,9 @@
 
 String codeVersion = "Version 1.0 Aug 2021 by CyrilBvt13";
 
+bool credentialsReceived = false;
+
+String cmd="";
 char* SSID ;
 char* password ;
 
@@ -10,8 +13,6 @@ int pinGPIO2 = 2;
 void setup() {
   Serial.begin(115200);
   delay(10);
-  Serial.println();
-  Serial.println();
   Serial.println(codeVersion);
 
   pinMode(pinGPIO2, OUTPUT);
@@ -24,11 +25,26 @@ void setup() {
 }
 
 void loop() {
-  while(//on a pas le login) {
-    //ON ATTEND LES INFOS DE CONNEXION
+  Serial.print("Wainting for credentials ");
+  while(credentialsReceived==false) {
+    delay(500);
+    Serial.print(".");    
     //https://forum.arduino.cc/t/serial-input-basics-updated/382007
-    }
-  //ON A LES INFOS DE CONNEXION
+    while(Serial.available()>0){
+        bool credentialsSent = false;
+        while(credentialsSent == false){
+          char buff=(char)Serial.read();
+          cmd+=buff;
+          if(buff =='*'){
+            cmd = cmd.substring(0, cmd.length() - 1); // Delete last char *        
+            credentialsSent = true;
+          }
+      }
+    //ON DECOUPE CMD EN SSID ET PASSWORD
+      
+    credentialsReceived=true;
+  }
+  Serial.print("Credentials received!");
   Serial.print("Connecting to ");
   Serial.println(SSID);
   WiFi.begin(SSID, password);
@@ -41,11 +57,18 @@ void loop() {
   Serial.println("");
   Serial.println("Connected to WiFi");
   
-  //ON ACTIVE LE PIN GPIO2 POUR DIRE A L'ARDUINO QU'ON EST CONNECTE
+  //We set GPIO2 to HIGH for telling the arduino we are connected
   analogWrite(pinGPIO2, 1023);
-  ledStatus = 1;
 
-  while(//On reçoit des infos) {
+  while(Serial.available()>0) {
     //ON ENVOIE LES INFOS PAR WIFI A L'API
+    String datas="";
+    char buff=(char)Serial.read();
+          datas+=buff;
+          if(buff =='*'){
+            datas = datas.substring(0, datas.length() - 1); // Delete last char *        
+          }
+    //Create a POST request
+    //https://randomnerdtutorials.com/esp8266-nodemcu-http-get-post-arduino/
     }
 }
