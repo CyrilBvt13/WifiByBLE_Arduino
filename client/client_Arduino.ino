@@ -29,7 +29,7 @@ void loop() {
     /*Testing if connection works*/
   if(testConnexion()){
     Serial.println("Connection OK.");
-    /*Sending data to ESP8266*/
+    /*Reading sensors and sending data to ESP8266*/
     
     //ADD YOUR CODE HERE!
     
@@ -99,7 +99,6 @@ bool testConnexion(){
 
 void writeCredentials(String cmd){
   Serial.println("Writing credentials to EEPROM...");
-  /*Writing credentials to EEPROM*/
   //We have to go through the whole chain cmd = 'SSID==wiFiSSIDPSW==wiFiPSW*
   int i=0;
   /*Wrinting expected String length in EEPROM*/
@@ -137,6 +136,6 @@ String readCredentials(){
 }
 
 void sendCredentials(String cmd){
-  //On passe par les pins TX/RX croisées ou on peut spécifier d'autres pins :
   //https://www.arduino.cc/en/Tutorial/LibraryExamples/SoftwareSerialExample
+  Serial.write(cmd);
 }
