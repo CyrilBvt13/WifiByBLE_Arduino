@@ -1,4 +1,3 @@
-  
 #include <SoftwareSerial.h>
 #include <EEPROM.h>
 
@@ -18,12 +17,13 @@ void setup() {
   Serial.begin(9600);
   //Initialize Bluetooth Serial Port
   hc06.begin(9600);
+  //Setting pin 5 to output
+  pinMode(5, OUTPUT);
   Serial.println("Initialization OK.");
   //Clearing the EEPROM
   //for (int i = 0 ; i < EEPROM.length() ; i++) {
   //  EEPROM.write(i, 0);
   }
-}
 
 void loop() {
     /*Testing if connection works*/
@@ -89,7 +89,7 @@ bool testConnexion(){
   /*we test the connection*/
   /*if OK returns true*/
   /*if !OK returns false*/
-  if(digitalRead(pin) == HIGH){
+  if(digitalRead(5) == HIGH){
     return true;
   }
   else{
@@ -115,7 +115,7 @@ void writeCredentials(String cmd){
       Serial.println(itoa(addrCredentials,string,10)); // -- DELETE
       Serial.println(cmd.substring(i,i+1)); // -- DELETE
     
-      EEPROM.write(addrCredentials, cmd.substring(i,i+1);
+      EEPROM.update(addrCredentials, (char)cmd[i]); //Replaced cmd.substring(i,i+1) to (char)cmd[i] 
       addrCredentials++;
       i++;
   }
@@ -129,13 +129,15 @@ String readCredentials(){
   /*Reading string lenght expecred*/
   int credLenght = EEPROM.read(addrCredentials);
   /*Reading credentials stored in EEPROM*/
-  for(i=0;i<credLenght;i++){
+  for(int i=0;i<credLenght;i++){
     credentials[i] = EEPROM.read(addrCredentials+1+i);
   }
   return credentials;
 }
 
 void sendCredentials(String cmd){
-  //https://www.arduino.cc/en/Tutorial/LibraryExamples/SoftwareSerialExample
-  Serial.write(cmd);
+  for (int i=0;i<cmd.length();i++)
+  {
+    Serial.write(cmd[i]);
+  }
 }
