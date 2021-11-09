@@ -29,7 +29,6 @@ void loop() {
   while(credentialsReceived==false) {
     delay(500);
     Serial.print(".");    
-    //https://forum.arduino.cc/t/serial-input-basics-updated/382007
     while(Serial.available()>0){
         bool credentialsSent = false;
         while(credentialsSent == false){
@@ -40,8 +39,17 @@ void loop() {
             credentialsSent = true;
           }
       }
-    //ON DECOUPE CMD EN SSID ET PASSWORD
-      
+    //ON DECOUPE CMD EN SSID ET PASSWORD SSID==wiFiSSID/PSW==wiFiPSW*
+    int i=5;
+    while(cmd[i]!='/'){
+        SSID = SSID + cmd[i];
+        i++;
+    }
+    i++;
+    while(i<cmd.length() - 1){
+        password = password + cmd[i];
+        i++;
+    }
     credentialsReceived=true;
   }
   Serial.print("Credentials received!");
@@ -61,7 +69,6 @@ void loop() {
   analogWrite(pinGPIO2, 1023);
 
   while(Serial.available()>0) {
-    //ON ENVOIE LES INFOS PAR WIFI A L'API
     String datas="";
     char buff=(char)Serial.read();
           datas+=buff;
@@ -70,6 +77,9 @@ void loop() {
           }
     //Create a POST request
     //https://randomnerdtutorials.com/esp8266-nodemcu-http-get-post-arduino/
+    
+    //ADD YOUR CODE HERE!
+    
     }
   }
 }
